@@ -2,64 +2,25 @@ import praw
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from botocore.exceptions import ClientError
+import os
 from termcolor import colored as c
-import boto3 
-import json
+from dotenv import load_dotenv
 
-def get_secret(secret_name):
-	
-	region_name = "us-east-1"
-	
-	session = boto3.session.Session()
-	
-	client = session.client(
-		service_name='secretsmanager',
-		region_name=region_name
-	)
-	
-	try:
-		get_secret_value_response = client.get_secret_value(
-			SecretId=secret_name
-		)
-	except ClientError as e:
-		raise e
-	
-	secret = get_secret_value_response['SecretString']
-	secret_dict = json.loads(secret)
-	
-	return secret_dict
-
-try:
-    aws_secrets = get_secret("my-aws-keys")
-except ClientError:
-	print(c("You don't have a an AWS key", 'red'))
-
-aws_access_key_id = aws_secrets['AWS_ACCESS_KEY_ID']
-aws_secret_access_key = aws_secrets['AWS_SECRET_ACCESS_KEY']
-
-
-session = boto3.Session(
-    aws_access_key_id=aws_access_key_id,
-    aws_secret_access_key=aws_secret_access_key,
-    region_name="us-east-1"
-)
-
-# Get application secrets
-secrets = get_secret("reddit-bot-keys")
+load_dotenv()
 
 # Your Reddit credentials
-CLIENT_ID = secrets['CLIENT_ID']
-CLIENT_SECRET = secrets['CLIENT_SECRET']
-REFRESH_TOKEN = secrets['REFRESH_TOKEN']
-USER_AGENT = secrets['USER_AGENT']
+CLIENT_ID = os.getenv('CLIENT_ID')
+CLIENT_SECRET = os.getenv('CLIENT_SECRET')
+REFRESH_TOKEN = os.getenv('REFRESH_TOKEN')
+USER_AGENT = os.getenv('USER_AGENT')
 
 # Your Email Credentials
-sender_email = secrets['SENDER_EMAIL']
-sender_password = secrets['SENDER_PASSWORD']
-email_recipient = secrets['EMAIL_RECIPIENT']
+sender_email = os.getenv('SENDER_EMAIL')
+sender_password = os.getenv('SENDER_PASSWORD')
+email_recipient = os.getenv('EMAIL_RECIPIENT')
 
-subreddit_name = 'AskReddit'
+# Name of Subreddit you're working with. No "r/" in name. AskReddit is good for testing
+subreddit_name = 'NAME_OF_SUBREDDIT'
 
 reddit = praw.Reddit(
 	client_id=CLIENT_ID,
