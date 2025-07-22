@@ -1,21 +1,18 @@
 import os
+import subprocess
 import requests
 import webbrowser
+from termcolor import colored as c
 from urllib.parse import urlencode
-from get_user_info import get_reddit_credentials
+from dotenv import load_dotenv
 
-(
-  client_id, 
-  client_secret, 
-  user_agent, 
-  refresh_token
-) = get_reddit_credentials()
+load_dotenv()
 
-CLIENT_ID = client_id
-CLIENT_SECRET = client_secret
+CLIENT_ID = os.getenv('CLIENT_ID')
+CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 REDIRECT_URI = 'http://localhost:8080/callback'
 DURATION = 'permanent'
-SCOPE = 'identity read'
+SCOPE = 'identity read submit history'
 
 creds = {
 	'client_id': CLIENT_ID,
@@ -46,6 +43,13 @@ headers = {'User-Agent': 'MyBot/0.0.1'}
 res = requests.post('https://www.reddit.com/api/v1/access_token',
 					 auth=auth, data=data, headers=headers)
 
+def write_to_clipboard(output: str):
+	process = subprocess.Popen('pbcopy', env={'LANG': 'en_US.UTF-8'}, stdin=subprocess.PIPE)
+	process.communicate(output.encode('utf-8'))
+ 
 response_json = res.json()
 refresh_token = response_json['refresh_token']
-print(f"\033[94mYour refresh token is\033[0m: {refresh_token}")
+print(f"\n{c('Your refresh token is', 'blue')}: {refresh_token}")
+
+write_to_clipboard(refresh_token)
+print(c('\nYour refresh token has been copied to clipboard! Keep it somewhere safe!', 'green'))
