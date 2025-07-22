@@ -4,12 +4,17 @@ import requests
 import webbrowser
 from termcolor import colored as c
 from urllib.parse import urlencode
-from dotenv import load_dotenv
+from get_user_info import get_reddit_credentials
 
-load_dotenv()
+(
+  client_id, 
+  client_secret, 
+  user_agent, 
+  refresh_token
+) = get_reddit_credentials()
 
-CLIENT_ID = os.getenv('CLIENT_ID')
-CLIENT_SECRET = os.getenv('CLIENT_SECRET')
+CLIENT_ID = client_id
+CLIENT_SECRET = client_secret
 REDIRECT_URI = 'http://localhost:8080/callback'
 DURATION = 'permanent'
 SCOPE = 'identity read submit history'
