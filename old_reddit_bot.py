@@ -4,15 +4,23 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import os
 from termcolor import colored as c
+from get_user_info import get_reddit_credentials
 from dotenv import load_dotenv
 
 load_dotenv()
 
+(
+  client_id, 
+  client_secret, 
+  user_agent, 
+  refresh_token
+) = get_reddit_credentials()
+
 # Your Reddit credentials
-CLIENT_ID = os.getenv('CLIENT_ID')
-CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-REFRESH_TOKEN = os.getenv('REFRESH_TOKEN')
-USER_AGENT = os.getenv('USER_AGENT')
+CLIENT_ID = client_id
+CLIENT_SECRET = client_secret
+REFRESH_TOKEN = refresh_token
+USER_AGENT = user_agent
 
 # Your Email Credentials
 sender_email = os.getenv('SENDER_EMAIL')
@@ -20,7 +28,7 @@ sender_password = os.getenv('SENDER_PASSWORD')
 email_recipient = os.getenv('EMAIL_RECIPIENT')
 
 # Name of Subreddit you're working with. No "r/" in name. AskReddit is good for testing
-subreddit_name = 'NAME_OF_SUBREDDIT'
+subreddit_name = 'AskReddit'
 
 reddit = praw.Reddit(
 	client_id=CLIENT_ID,

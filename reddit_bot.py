@@ -7,6 +7,10 @@ from termcolor import colored as c
 import boto3 
 import json
 
+
+print(c("YOU PROBABLY MEANT TO RUN 'python3 old_reddit_bot.py'", 'cyan'))
+
+
 def get_secret(secret_name):
 	
 	region_name = "us-east-1"
