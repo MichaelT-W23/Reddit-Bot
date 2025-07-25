@@ -17,7 +17,7 @@ CLIENT_ID = client_id
 CLIENT_SECRET = client_secret
 REDIRECT_URI = 'http://localhost:8080/callback'
 DURATION = 'permanent'
-SCOPE = 'identity read submit history'
+SCOPE = 'identity read submit history edit'
 
 creds = {
 	'client_id': CLIENT_ID,
